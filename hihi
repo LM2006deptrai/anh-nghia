@@ -1,0 +1,64 @@
+import pygame
+from abc import ABC, abstractmethod
+
+pygame.init()
+pygame.mixer.init()
+
+sound_i = "D:/Python/python_scripts/sounds/LM.mp3"
+sound_o = "D:/Python/python_scripts/sounds/LH.mp3"
+class Audio(ABC):
+    @abstractmethod
+    def play(self):
+        pass
+    
+    @abstractmethod
+    def stop(self):
+        pass
+class Sound(Audio):
+    def __init__(self, sound_path):
+        self.__sound_path = sound_path  
+        pygame.mixer.music.load(self.__sound_path)
+
+    def play(self):
+        pygame.mixer.music.play()
+
+    def stop(self):
+        pygame.mixer.music.stop()
+
+    def get_sound_path(self):
+        return self.__sound_path
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    
+    def introduce(self):
+        print(f"Hello, I am {self.name}, {self.age} years old.")
+class HSFPT(Person):
+    def __init__(self, name, age, university, sound_path):
+        super().__init__(name, age)  
+        self.__university = university  
+        self.sound = Sound(sound_path)  
+
+    def introduce(self):
+        print(f"Hello, I am {self.name}, {self.age} years old, studying at {self.__university}")
+
+    def play_sound(self):
+        self.sound.play()
+
+    def get_university(self):
+        return self.__university
+
+    def set_university(self, university):
+        self.__university = university  
+LM = HSFPT("Minh", 18, "FPT", sound_i)
+LH = HSFPT("Hoàng", 18, "FPT", sound_o)
+students = [LM, LH]
+for student in students:
+    student.introduce()
+    student.play_sound()
+pygame.time.wait(7000)
+LM.sound.stop()
+LH.sound.stop()
+LM.set_university("University in Hanoi")
+print(LM.get_university())  
